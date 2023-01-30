@@ -1,5 +1,8 @@
 import React, {useEffect, useState} from 'react';
+import {z} from 'zod'
 import {QuizStructure} from '../models/quizmodel'
+
+type QuizStructure = z.infer<typeof QuizStructure>
 
 const Quiz: React.FC = () => {
 
@@ -20,12 +23,20 @@ const Quiz: React.FC = () => {
         event.preventDefault();
         // const elements = event.currentTarget.elements[0];
         const formData = new FormData(event.currentTarget)
-        const obj: any = {};
+        const obj: {[key: string]: any} = {};
         for(let [key, value] of formData.entries()){
             obj[key] = value;
         }
 
-        setResults(obj);
+        const constructionValidator = QuizStructure.safeParse(obj)
+        if (constructionValidator.success === false){
+            const message = constructionValidator.error;
+            console.error(`Invalid form data: ${message}`)
+            return undefined;
+          } else {
+            console.log(constructionValidator.data);
+            setResults(obj);
+          }
 
         fetch('/api/quizsubmission', {
             method: "POST",

@@ -1,11 +1,12 @@
-export interface QuizStructure{
-    name: string,
-    age: string,
-    cats?: boolean,
-    hobbies: string,
-    StateManagement?: 'Redux' | 'Flux',
-    Backend: string,
-    preferredLanguage: string,
-    API: string,
-    OAuth: string
-}
+import {z} from 'zod'
+export const QuizStructure = z.object({
+    name: z.string(),
+    age: z.string(),
+    cats: z.boolean().optional(),
+    hobbies: z.string(),
+    StateManagement: z.enum(['Redux', 'Flux']).optional(),
+    Backend: z.string(),
+    preferredLanguage: z.string(),
+    API: z.string(),
+    OAuth: z.string()
+})
