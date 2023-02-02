@@ -8,11 +8,29 @@ import Login from './components/Login';
 import Quiz from './components/Quiz';
 import Register from './components/Register';
 import Results from './components/Results';
+import App from './App';
+import { RecoilRoot } from "recoil";
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: '/:loginId',
+    element: <Homepage />
+  },
+  {
+    path: 'quiz/:loginId',
+    element: <Quiz />
+  },
+  {
+    path: 'login',
     element: <Login />
+  },
+  {
+    path: 'Register',
+    element: <Register />
+  },
+  {
+    path: "Results/:loginId",
+    element: <Results />
   }
 ])
 
@@ -20,7 +38,10 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 ).render(
   <React.StrictMode>
+    <RecoilRoot>
     <RouterProvider router={router} />
+    <App />
+    </RecoilRoot>
   </React.StrictMode>
 );
 

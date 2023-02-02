@@ -5,13 +5,13 @@ import { LoginCredentials } from '../models/LoginCredentials';
 
 function Results(props: LoginCredentials): JSX.Element {
     const [ready, setReady] = useState(false);
-    const [data, setData] = useState<QuizStructure[]>([]) 
+    const [data, setData] = useState< typeof QuizStructure[]>([]) 
     
     useEffect(()=>{
         if(ready===true){
             fetch(`/api/quizFetch${props.userId}`)
             .then(data=> data.json())
-            .then((res:QuizStructure[])=>{
+            .then((res: typeof QuizStructure[])=>{
                 setData([...res])
             })
             .catch(err => console.log('error with data collection,', err));

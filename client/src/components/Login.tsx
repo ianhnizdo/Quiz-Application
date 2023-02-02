@@ -1,3 +1,4 @@
+import { json } from 'body-parser';
 import React, {useEffect, useState} from 'react';
 
 function Login(): JSX.Element {
@@ -10,8 +11,8 @@ function Login(): JSX.Element {
         if(user.length === 0 || pass.length === 0){
             alert('you must pass in a username and password');
         }
-        setUsername(user);
-        setPassword(pass);
+        // setUsername(user);
+        // setPassword(pass);
         fetch('/api/loginAuthentication', {
             method: "GET",
             headers: {
@@ -19,6 +20,7 @@ function Login(): JSX.Element {
             },
             body: JSON.stringify({userId: username, passId: password})
         })
+        .then(res=> res.json())
         .catch(err=>console.log('error with login,', err));
     }
 

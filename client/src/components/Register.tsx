@@ -4,7 +4,7 @@ import { AccountCreation, ResetPassword } from '../models/Accountobj';
 
 import { LoginCredentials } from '../models/LoginCredentials';
 
-function Register(props: LoginCredentials): JSX.Element{
+function Register(): JSX.Element{
     // const [username, setUsername] = useState<string>('');
     // const [password1, setpassword1] = useState<string>('');
     // const [password2, setpassword2] = useState<string>('');
