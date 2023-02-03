@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 
 import { LoginCredentials } from '../models/LoginCredentials'
 
-function Homepage(props: LoginCredentials) : JSX.Element {
+function Homepage() : JSX.Element {
     const [slideIndex, setSlideIndex]=useState<number>(0)
     // const [slideNum, setSlideNum] = useState<number>(0)
 

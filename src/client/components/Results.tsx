@@ -3,13 +3,14 @@ import {QuizStructure} from '../models/quizmodel'
 
 import { LoginCredentials } from '../models/LoginCredentials';
 
-function Results(props: LoginCredentials): JSX.Element {
+function Results(): JSX.Element {
     const [ready, setReady] = useState(false);
     const [data, setData] = useState< typeof QuizStructure[]>([]) 
     
     useEffect(()=>{
         if(ready===true){
-            fetch(`/api/quizFetch${props.userId}`)
+            // fetch(`/api/quizFetch${props.userId}`)
+            fetch(`/api/quizFetchprops.userId`)
             .then(data=> data.json())
             .then((res: typeof QuizStructure[])=>{
                 setData([...res])
@@ -22,7 +23,7 @@ function Results(props: LoginCredentials): JSX.Element {
         }
     })
 
-    function deleteEntry(el: QuizStructure, id: number){
+    function deleteEntry(el: typeof QuizStructure, id: number){
         fetch(`/api/quizDelete/${id}`,{
             method: 'DELETE',
             body: JSON.stringify(data)
