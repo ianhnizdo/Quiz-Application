@@ -1,18 +1,20 @@
 import React, {useState, useEffect} from 'react';
 import {QuizStructure} from '../models/quizmodel'
-
+import {z} from 'zod';
 import { LoginCredentials } from '../models/LoginCredentials';
+
+type QuizStructure = z.infer<typeof QuizStructure>;
 
 function Results(): JSX.Element {
     const [ready, setReady] = useState(false);
-    const [data, setData] = useState< typeof QuizStructure[]>([]) 
+    const [data, setData] = useState< QuizStructure[]>([]) 
     
     useEffect(()=>{
         if(ready===true){
             // fetch(`/api/quizFetch${props.userId}`)
             fetch(`/api/quizFetchprops.userId`)
             .then(data=> data.json())
-            .then((res: typeof QuizStructure[])=>{
+            .then((res: QuizStructure[])=>{
                 setData([...res])
             })
             .catch(err => console.log('error with data collection,', err));
@@ -23,7 +25,7 @@ function Results(): JSX.Element {
         }
     })
 
-    function deleteEntry(el: typeof QuizStructure, id: number){
+    function deleteEntry(el: QuizStructure, id: number){
         fetch(`/api/quizDelete/${id}`,{
             method: 'DELETE',
             body: JSON.stringify(data)
@@ -34,7 +36,13 @@ function Results(): JSX.Element {
 
     
     function makeResults(info: QuizStructure[]){
-        
+        const constructionValidator = QuizStructure.safeParse(info);
+
+        if(constructionValidator.success===false) {
+            const message = constructionValidator.error;
+            console.log('Failure,', message);
+            return undefined
+        }
          const results = info.map((el,i)=>{
             return(
                     <ul className="ResultEntries" id={`Result${i}`}>
