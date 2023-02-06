@@ -1,20 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {createBrowserRouter, RouterProvider, Route, createRoutesFromElements} from "react-router-dom";
+import {createBrowserRouter, RouterProvider, Route, Routes} from "react-router-dom";
 import './index.css';
+import AuthContext from './context/AuthProvider';
 import reportWebVitals from './reportWebVitals';
 import Homepage from './components/Homepage';
 import Login from './components/Login';
 import Quiz from './components/Quiz';
 import Register from './components/Register';
 import Results from './components/Results';
-import App from './App';
+// import App from './App';
+import RequireAuth from './components/RequireAuth';
 import { RecoilRoot } from "recoil";
 
 const router = createBrowserRouter([
   {
     path: '/:loginId',
-    element: <Homepage />
+    element: <Homepage />,
+    
   },
   {
     path: 'quiz/:loginId',
@@ -38,10 +41,9 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 ).render(
   <React.StrictMode>
-    <RecoilRoot>
+    <AuthContext>
     <RouterProvider router={router} />
-    <App />
-    </RecoilRoot>
+    </AuthContext>
   </React.StrictMode>
 );
 
