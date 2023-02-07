@@ -9,10 +9,6 @@ const USER_REGEX = /^[a-azA-Z][a-zA-Z0-9-_]{3,23}$/;
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/ 
 
 function Register(): JSX.Element{
-    // const [username, setUsername] = useState<string>('');
-    // const [password1, setpassword1] = useState<string>('');
-    // const [password2, setpassword2] = useState<string>('');
-
     const userRef = React.useRef<HTMLInputElement>(null);
     const errRef = React.useRef<HTMLParagraphElement>(null);
 
@@ -59,60 +55,63 @@ function Register(): JSX.Element{
         setErrMsg('');
     }, [user, pwd, matchPwd]);
 
-    const [register, setRegister] = useState<boolean>(false)
-    const [forgotPass, setForgotPass] = useState<boolean>(false)
+    // const [register, setRegister] = useState<boolean>(false)
+    // const [forgotPass, setForgotPass] = useState<boolean>(false)
 
-    function check(event: React.FormEvent<HTMLFormElement>){
+    function registerUser(event: React.FormEvent<HTMLFormElement>){
         event.preventDefault();
-
-        const user= (event.currentTarget.elements[0] as HTMLInputElement).value;
-        const pass1 = (event.currentTarget.elements[1] as HTMLInputElement).value;
-        const pass2 = (event.currentTarget.elements[2] as HTMLInputElement).value;
         
-        if(pass1 !== pass2){
-            alert('Passwords must match');
-        }
-        const obj = {
-            username: user,
-            password1 : pass1,
-            password2: pass2,
-        }
-        fetch(forgotPass ? `/api/registeruser`: `/api/forgotpassword`, {
-            method: 'POST',
-            headers:{
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(obj)
-        })
-        //Should get a res.redirect if successful
-        .then((response:Response) => response.json())
-        .then((data : AccountCreation | ResetPassword)=>{
-            
-            if('success' in data){
-                return alert('Reset successful! You should write your password down somewhere if you have any common sense.')
-            }
-            if(data.message === true){
-                //make page alert you that your profile already exists
-                return alert('A profile already exists for this user. You should reset your password if you forgot it.')
+        // What is this, its additional validation. Currently the submit button is the only thing preventing or enforcing regex validation. That can be hacked by someone just grabbing it through the console.
 
-            }
-            return
-        })
-        .catch(err=> console.log('Error with function check,', err));
+        const v1 = USER_REGEX.test(user);
+        const v2 = PWD_REGEX.test(pwd)
+        
+        if(!v1 || !v2){
+            setErrMsg("Invalid Entry");
+            return;
+        }
+
+        // const user= (event.currentTarget.elements[0] as HTMLInputElement).value;
+        // const pass1 = (event.currentTarget.elements[1] as HTMLInputElement).value;
+        // const pass2 = (event.currentTarget.elements[2] as HTMLInputElement).value;
+        
+        // if(pass1 !== pass2){
+        //     alert('Passwords must match');
+        // }
+        // const obj = {
+        //     username: user,
+        //     password1 : pass1,
+        //     password2: pass2,
+        // }
+
+        // fetch(`/api/registeruser`, {
+        //     method: 'POST',
+        //     headers:{
+        //         'Content-Type': 'application/json'
+        //     },
+        //     body: JSON.stringify(obj)
+        // })
+        // //Should get a res.redirect if successful
+        // .then((response:Response) => response.json())
+        // .then((data : AccountCreation | ResetPassword)=>{
+            
+        //     if('success' in data){
+        //         return alert('Reset successful! You should write your password down somewhere if you have any common sense.')
+        //     }
+        //     if(data.message === true){
+        //         //make page alert you that your profile already exists
+        //         return alert('A profile already exists for this user. You should reset your password if you forgot it.')
+
+        //     }
+        //     return
+        // })
+        // .catch(err=> console.log('Error with function check,', err));
     }
-    if(forgotPass){
-        return(
-            <section className="Forgot Password">
-                <form className="Pass">
-                </form>
-            </section>            
-        )
-    }
-    else return(
+    return(
         <section className="Registration">
         <p ref={errRef} className={errMsg ? 'errrmsg' : 'offscreen'} aria-live="assertive">{errMsg}</p>
         <h1>Register</h1>
-        <form className="Register" onSubmit={check}>
+        <form className="Register" onSubmit={registerUser}>
 
             <label htmlFor='username'>What is your username?
                 <span className={validName ? "valid" : "hide"}>
