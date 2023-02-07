@@ -1,13 +1,64 @@
-import React, {useState} from 'react'
-
+import React, {useState, useEffect, useRef} from 'react'
+import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AccountCreation, ResetPassword } from '../models/Accountobj';
 
 import { LoginCredentials } from '../models/LoginCredentials';
+
+const USER_REGEX = /^[a-azA-Z][a-zA-Z0-9-_]{3,23}$/;
+const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/ 
 
 function Register(): JSX.Element{
     // const [username, setUsername] = useState<string>('');
     // const [password1, setpassword1] = useState<string>('');
     // const [password2, setpassword2] = useState<string>('');
+
+    const userRef = React.useRef<HTMLInputElement>(null);
+    const errRef = React.useRef<HTMLParagraphElement>(null);
+
+    const [user, setUser] = useState('');
+    const [validName, setValidName] = useState(false);
+    //Do we have focus on that input field
+    const [userFocus, setUserFocus] = useState(false);
+
+    const [pwd, setPwd] = useState('');
+    const [validPwd, setValidPwd] = useState(false);
+    const [pwdFocus, setPwdFocus] = useState(false);
+
+    const [matchPwd, setMachPwd] = useState('');
+    const [validMatch, setValidMatch]= useState(false);
+    const [matchFocus, setMatchFocus] = useState(false);
+
+    const [errMsg, setErrMsg] = useState('');
+    const [success, setSuccess] = useState(false);
+
+    useEffect(()=>{
+        //focus, when component loads. Focus is on username.
+        userRef.current?.focus();
+    }, []);
+
+    //Applied to username, validate username.
+    useEffect(()=>{
+        const result= USER_REGEX.test(user);
+        console.log(result);
+        console.log(user);
+        setValidName(result);
+    }, [user])
+
+    //If either the pwd or matchPwd changes the values will be updated
+    useEffect(()=>{
+        const result = PWD_REGEX.test(pwd);
+        console.log(result);
+        console.log(pwd);
+        setValidPwd(result);
+        const match = pwd === matchPwd;
+        setValidMatch(match);
+    }, [pwd, matchPwd])
+
+    useEffect(()=>{
+        setErrMsg('');
+    }, [user, pwd, matchPwd]);
+
     const [register, setRegister] = useState<boolean>(false)
     const [forgotPass, setForgotPass] = useState<boolean>(false)
 
@@ -51,7 +102,9 @@ function Register(): JSX.Element{
     }
     if(forgotPass){
         return(
-            <div className="Registration">
+            <section className="Registration">
+                <p ref={errRef} className={errMsg ? 'errrmsg' : 'offscreen'} aria-live="assertive">{errMsg}</p>
+                <h1>Register</h1>
                 <form className="Reset_Pass" onSubmit={check}>
                     <label htmlFor='username'>What is your username?</label>
                     <input type='text' name='username' id='username' required/>
@@ -61,7 +114,7 @@ function Register(): JSX.Element{
                     <input type='password' name='password2' id='password2' minLength={8} maxLength={16} required/>
                     <button type='submit'>Submit</button>
                 </form>
-            </div>            
+            </section>            
         )
     }
     else return(
